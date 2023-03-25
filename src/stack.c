@@ -1,2 +1,4 @@
-// this is lib for stack
-//
+#include <stdio.h>
+#include <stdlib.h>
+
+ 
