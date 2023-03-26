@@ -2,41 +2,43 @@
 #include <string.h>
 #include <stdlib.h>
 
-void valid(char *inArr);
-int isDigit(char ch);
-
 typedef struct s_stack Stack;
-struct element {
-    char * value;
-    int priority;
-};
 
 struct s_stack {
-    struct element* elem;
+    char *valueC;
+    double valueD;
+    int isLexem;
+    int isDigit;
+    int isBin;
+
     struct s_stack* last;
 };
+
+void parser(char *inArr);
+int isDigit(char ch);
+Stack *initStack();
+
     
 int main(void) {
     char inArr[100];
 
-    /* int i = 0; */
     scanf("%s", inArr);
-    /* while(putchar(inArr[i++]) != '\0'); */
-    valid(inArr);
+    parser(inArr);
     return (0);
 }
 
-void valid(char *inArr) {
-    Stack out[100];
-    Stack st[100];
-    int outC = 0, stackC = 0;
-    /* int countArr = 0; */
-    /* int flag = 1; */
+void parser(char *inArr) {
+    Stack* sp = initStack();
+    Stack* qu[100];
+    int cqu = 0;
+
+    
     
     for (int i = 0; inArr[i] != '\0'; i++) {
         if (inArr[i] == 's' && inArr[i+1] == 'i' && inArr[i+2] == 'n') {
             i += 2;
             printf("sin\n");
+            
         } else if (inArr[i] == 's' && inArr[i+1] == 'q' && inArr[i+2] == 'r' && inArr[i+3] == 't') {
             i += 3;
             printf("sqrt\n");
@@ -70,6 +72,9 @@ void valid(char *inArr) {
                 i++;
             }
             i--;
+
+
+
         } else if (inArr[i] == 'x') {
             printf("x\n");
         }
@@ -85,22 +90,32 @@ int isDigit(char ch) {
     return res;
 }
 
-Stack *initStack(char* new) {
+Stack *initStack() {
     Stack* st = malloc(sizeof(Stack));
-    st->elem->value = new;
+    st->valueC = NULL;
+    st->valueD = 0;
+    st->isLexem = 0;
+    st->isDigit = 0;
+    st->isBin = 0;
+
     st->last = NULL;
     return (st);
 }
 
-void push(Stack* last, char* new) {
+void push(Stack* last, char* valueC, double valueD, int isLexem, int isDigit, int isBin) {
     Stack* st = malloc(sizeof(Stack));
-    st->value = new;
-    st->last = last;
+    st->valueC = NULL;
+    st->valueD = 0;
+    st->isLexem = 0;
+    st->isDigit = 0;
+    st->isBin = 0;
+
+    st->last = last->last;
+
 }
 
-void pull(Stack* last, char * value) {
+void pop(Stack* last, char * value) {
     Stack* st = last;
-    value = last->value;
 }
 
 
