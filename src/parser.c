@@ -15,6 +15,14 @@ int main(void) {
 
 }
 
+/**
+ * @brief 
+ *
+ * @param is_error for error
+ * @param counterChar for count chars
+ *
+ * @return string in arr
+ */
 char* getStr(int *is_error, int *counterChar) {
     char *str = calloc(1, sizeof(char));
     char c;
@@ -34,6 +42,12 @@ char* getStr(int *is_error, int *counterChar) {
     return (str);
 }
 
+/**
+ * @brief 
+ *
+ * @param arr
+ * @param counterChar
+ */
 void parseStr(char **arr, int counterChar) {
     for (int i = 0; i < counterChar; i++) {
         if ((*arr)[i] == 's' && (*arr)[i+1] == 'i' && (*arr)[i+2] == 'n') {
