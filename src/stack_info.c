@@ -1,19 +1,19 @@
-#include "stack.h"
+#include "stack_info.h"
 
 /**
  * @brief init stack with void params
  *
- * @warning wtf = -1 -- that mean it is first elem and not use this elem in prog
+ * @warning wtf = 666 -- that mean it is first elem and not use this elem in prog
  *
  * 
  * @return first elem in stack
  */
-t_stack* initSt() {
-    t_stack* st = calloc(1, sizeof(t_stack));
+t_stack_i* initSt_i() {
+    t_stack_i* st = calloc(1, sizeof(t_stack_i));
     st->wtf = 666;
-    st->num = 0.0;
     st->lexem[0] = ' ';
     st->prev = NULL;
+    st->prior = -2;
     return (st);
 }
 
@@ -22,17 +22,17 @@ t_stack* initSt() {
  *
  * @param st - latest elem in stack
  * @param wtf - what is it
- * @param num 
  * @param lexem
+ * @param prior - priority for operations
  *
  * @return elem on top stack 
  */
-t_stack* pushSt(t_stack* st, int wtf, double num, char *lexem) {
-    t_stack* new_st = calloc(1, sizeof(t_stack));
+t_stack_i* pushSt_i(t_stack_i* st, int wtf, char *lexem, int prior) {
+    t_stack_i* new_st = calloc(1, sizeof(t_stack_i));
     strcpy(new_st->lexem, lexem);
-    new_st->num = num;
     new_st->wtf = wtf;
     new_st->prev = st;
+    new_st->prior = prior;
 
     return (new_st);
 }
@@ -43,16 +43,14 @@ t_stack* pushSt(t_stack* st, int wtf, double num, char *lexem) {
  *
  * @param st
  * @param wtf
- * @param num
  * @param lexem[5]
  *
  * @return elem under pop elem
  */
-t_stack* popSt(t_stack* st, int *wtf, double *num, char lexem[5]) {
+t_stack_i* popSt_i(t_stack_i* st, int *wtf, char lexem[5]) {
     strcpy(lexem, st->lexem);
-    *num = st->num;
     *wtf = st->wtf ;
-    t_stack* temp = st->prev;
+    t_stack_i* temp = st->prev;
     free(st);
     return(temp);
 }
@@ -63,9 +61,9 @@ t_stack* popSt(t_stack* st, int *wtf, double *num, char lexem[5]) {
  *
  * @param st
  */
-void destroySt(t_stack* st) {
+void destroySt_i(t_stack_i* st) {
     while (st) {
-        t_stack* temp = st->prev;
+        t_stack_i* temp = st->prev;
         free(st);
         st = temp;
     }
