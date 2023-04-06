@@ -10,9 +10,9 @@
  */
 t_stack* initSt() {
     t_stack* st = calloc(1, sizeof(t_stack));
+    st->wtf = 666;
+    st->num = 0.0;
     st->lexem[0] = ' ';
-    st->num = 0;
-    st->wtf = -1;
     st->prev = NULL;
     return (st);
 }
@@ -27,7 +27,7 @@ t_stack* initSt() {
  *
  * @return elem on top stack 
  */
-t_stack* pushSt(t_stack* st, int wtf, int num, char *lexem) {
+t_stack* pushSt(t_stack* st, int wtf, double num, char *lexem) {
     t_stack* new_st = calloc(1, sizeof(t_stack));
     strcpy(new_st->lexem, lexem);
     new_st->num = num;
@@ -48,7 +48,7 @@ t_stack* pushSt(t_stack* st, int wtf, int num, char *lexem) {
  *
  * @return elem under pop elem
  */
-t_stack* popSt(t_stack* st, int *wtf, int *num, char lexem[5]) {
+t_stack* popSt(t_stack* st, int *wtf, double *num, char lexem[5]) {
     strcpy(lexem, st->lexem);
     *num = st->num;
     *wtf = st->wtf ;
@@ -64,10 +64,10 @@ t_stack* popSt(t_stack* st, int *wtf, int *num, char lexem[5]) {
  * @param st
  */
 void destroySt(t_stack* st) {
-    while (st->wtf != -1) {
+    while (st) {
         t_stack* temp = st->prev;
         free(st);
         st = temp;
     }
-    free(st);
+    /* free(st); */
 }
