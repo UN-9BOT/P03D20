@@ -13,5 +13,5 @@ struct Stack_i {
 
 t_stack_i* initSt_i();
 t_stack_i* pushSt_i(t_stack_i* st, int wtf, char *lexem, int prior);
-t_stack_i* popSt_i(t_stack_i* st, int *wtf, char lexem[5]);
+t_stack_i* popSt_i(t_stack_i* st, int *wtf, char *lexem);
 void destroySt_i(t_stack_i* st);

@@ -47,10 +47,10 @@ t_stack_i* pushSt_i(t_stack_i* st, int wtf, char *lexem, int prior) {
  *
  * @return elem under pop elem
  */
-t_stack_i* popSt_i(t_stack_i* st, int *wtf, char lexem[5]) {
+t_stack_i* popSt_i(t_stack_i* st, int *wtf, char *lexem) {
     strcpy(lexem, st->lexem);
-    *wtf = st->wtf ;
     t_stack_i* temp = st->prev;
+    *wtf = st->wtf;
     free(st);
     return(temp);
 }

@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "stack_num.h"
 #include "stack_info.h"
 
@@ -14,7 +15,8 @@ void parseStr(char **arr, int);
 void magic(int wtf, char *lex, double num, t_stack_i**, t_stack_n**, int prior);
 int isDigit(char ch);
 void calcBrack(t_stack_i **, t_stack_n **);
-double calcOper(char oper, double num1, double num2);
+double calcOper(char *lex, double num1, double num2);
+double calcTrig(char *lex, double num);
 
 int main(void) {
     int is_error = 0;
@@ -142,10 +144,19 @@ void magic(int wtf, char *lex, double num, t_stack_i** st_i, t_stack_n** st_n, i
             break;
         case OPER:
             while (prior >= (*st_i)->prior) {
-                double num1, num2;
-                *st_n = popSt_n(*st_n, &num1);
-                *st_n = popSt_n(*st_n, &num2);
-                calcOper(lex[0], num1, num2);
+                char lex_pop[5];
+                int wtf_pop;
+                *st_i = popSt_i(*st_i, &wtf_pop, lex_pop);
+                if (wtf_pop == TRIG) {
+                    double num1;
+                    *st_n = popSt_n(*st_n, &num1);
+                    calcTrig(lex_pop, num1);
+                } else {
+                    double num1, num2;
+                    *st_n = popSt_n(*st_n, &num1);
+                    *st_n = popSt_n(*st_n, &num2);
+                    calcOper(lex_pop, num1, num2);
+                }
             }
             
             break;
@@ -159,7 +170,7 @@ void magic(int wtf, char *lex, double num, t_stack_i** st_i, t_stack_n** st_n, i
     }
 }
 
-double calcOper(char oper, double num1, double num2){
+double calcOper(char *lex, double num1, double num2){
     double res;
 
     return (res);
