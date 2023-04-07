@@ -105,9 +105,7 @@ void parseStr(char **arr, int counterChar) {
             magic(NUMB, ' ', 10, &st_i, &st_n, -1);
         }
     }
-    /* double num; */
-    /* popSt_n(st_n, &num); */
-    /* printf("res = %lf", num); */
+    printf("\noper in stack\n %c\n", st_i->lexem);
     char lex_pop;
     int wtf_pop;
     st_i = popSt_i(st_i, &wtf_pop, &lex_pop);
@@ -145,16 +143,16 @@ int isDigit(char ch) {
  * @param st_n
  * @param prior
  */
-void magic(int wtf, char lex, double num, t_stack_i** st_i, t_stack_n** st_n, int prior) {
+void magic(int tf, char lex, double num, t_stack_i** st_i, t_stack_n** st_n, int prior) {
     if (wtf == TRIG) {
         *st_i = pushSt_i(*st_i, wtf, lex, prior);
     } else if (wtf == NUMB) {
         *st_n = pushSt_n(*st_n, num); 
     } else if (wtf == OPER) {
         while (prior >= (*st_i)->prior) {
-            char lex_pop[5];
+            char lex_pop;
             int wtf_pop;
-            *st_i = popSt_i(*st_i, &wtf_pop, lex_pop);
+            *st_i = popSt_i(*st_i, &wtf_pop, &lex_pop);
             if (wtf_pop == TRIG) {
                 double num1;
                 *st_n = popSt_n(*st_n, &num1);
@@ -163,7 +161,7 @@ void magic(int wtf, char lex, double num, t_stack_i** st_i, t_stack_n** st_n, in
                 double num1, num2;
                 *st_n = popSt_n(*st_n, &num1);
                 *st_n = popSt_n(*st_n, &num2);
-                calcOper(lex_pop[0], num1, num2);
+                calcOper(lex_pop, num1, num2);
             }
         }
     } else if (wtf == BRAC) {
@@ -184,7 +182,7 @@ void magic(int wtf, char lex, double num, t_stack_i** st_i, t_stack_n** st_n, in
  *
  * @return 
  */
-double calcOper(char lex, double num1, double num2){
+doble calcOper(char lex, double num1, double num2){
     double res;
     printf("%lf && %lf", num1, num2);
     if (lex == '*') {
