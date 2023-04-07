@@ -1,5 +1,6 @@
 #include "stack_num.h"
 
+
 /**
  * @brief init stack with void params
  *
@@ -8,7 +9,7 @@
  * 
  * @return first elem in stack
  */
-t_stack_n* initSt() {
+t_stack_n* initSt_n() {
     t_stack_n* st = calloc(1, sizeof(t_stack_n));
     st->num = 0.0;
     st->prev = NULL;
@@ -23,7 +24,7 @@ t_stack_n* initSt() {
  *
  * @return elem on top stack 
  */
-t_stack_n* pushSt(t_stack_n* st, double num) {
+t_stack_n* pushSt_n(t_stack_n* st, double num) {
     t_stack_n* new_st = calloc(1, sizeof(t_stack_n));
     new_st->num = num;
     new_st->prev = st;
@@ -40,7 +41,7 @@ t_stack_n* pushSt(t_stack_n* st, double num) {
  *
  * @return elem under pop elem
  */
-t_stack_n* popSt(t_stack_n* st,double *num) {
+t_stack_n* popSt_n(t_stack_n* st,double *num) {
     *num = st->num;
     t_stack_n* temp = st->prev;
     free(st);
@@ -53,7 +54,7 @@ t_stack_n* popSt(t_stack_n* st,double *num) {
  *
  * @param st
  */
-void destroySt(t_stack_n* st) {
+void destroySt_n(t_stack_n* st) {
     while (st) {
         t_stack_n* temp = st->prev;
         free(st);

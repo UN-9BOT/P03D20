@@ -1,22 +1,5 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include "parser.h"
 #include "stack_num.h"
-#include "stack_info.h"
-
-#define TRIG 1
-#define NUMB 2
-#define OPER 3
-#define BRAC 4
-#define X 5
-
-char* getStr(int *is_error, int *);
-void parseStr(char **arr, int);
-void magic(int wtf, char *lex, double num, t_stack_i**, t_stack_n**, int prior);
-int isDigit(char ch);
-void calcBrack(t_stack_i **, t_stack_n **);
-double calcOper(char *lex, double num1, double num2);
-double calcTrig(char *lex, double num);
 
 int main(void) {
     int is_error = 0;
@@ -70,63 +53,80 @@ void parseStr(char **arr, int counterChar) {
         if ((*arr)[i] == 's' && (*arr)[i+1] == 'i' && (*arr)[i+2] == 'n') {
             i += 2;
             printf("sin\n");
-            magic(TRIG, "sin", -1, &st_i, &st_n, 1);
+            magic(TRIG, 's', -1, &st_i, &st_n, 1);
         } else if ((*arr)[i] == 's' && (*arr)[i+1] == 'q' && (*arr)[i+2] == 'r' && (*arr)[i+3] == 't') {
             i += 3;
             printf("sqrt\n");
-            magic(TRIG, "sqrt", -1, &st_i, &st_n, 1);
+            magic(TRIG, 'q', -1, &st_i, &st_n, 1);
         } else if ((*arr)[i] == 'c' && (*arr)[i+1] == 'o' && (*arr)[i+2] == 's') {
             i += 2;
             printf("cos\n");
-            magic(TRIG, "cos", -1, &st_i, &st_n, 1);
+            magic(TRIG, 'c', -1, &st_i, &st_n, 1);
         } else if ((*arr)[i] == 'c' && (*arr)[i+1] == 't' && (*arr)[i+2] == 'g') {
             i += 2;
             printf("ctg\n");
-            magic(TRIG, "ctg", -1, &st_i, &st_n, 1);
+            magic(TRIG, 'g', -1, &st_i, &st_n, 1);
         } else if ((*arr)[i] == 't' && (*arr)[i+1] == 'a' && (*arr)[i+2] == 'n') {
             i += 2;
             printf("tan\n");
-            magic(TRIG, "tan", -1, &st_i, &st_n, 1);
+            magic(TRIG, 't', -1, &st_i, &st_n, 1);
         } else if ((*arr)[i] == 'l' && (*arr)[i+1] == 'n') {
             i += 1;
             printf("ln\n");
-            magic(TRIG, "ln", -1, &st_i, &st_n, 1);
+            magic(TRIG, 'l', -1, &st_i, &st_n, 1);
         } else if ((*arr)[i] == '+') {
             printf("+\n");
-            magic(OPER, "+", -1, &st_i, &st_n, 3);
+            magic(OPER, '+', -1, &st_i, &st_n, 3);
         } else if ((*arr)[i] == '-') {
             printf("-\n");
-            magic(OPER, "-", -1, &st_i, &st_n, 3);
+            magic(OPER, '-', -1, &st_i, &st_n, 3);
         } else if ((*arr)[i] == '*') {
             printf("*\n");
-            magic(OPER, "*", -1, &st_i, &st_n, 2);
+            magic(OPER, '*', -1, &st_i, &st_n, 1);
         } else if ((*arr)[i] == '/') {
             printf("/\n");
-            magic(OPER, "/", -1, &st_i, &st_n, 2);
+            magic(OPER, '/', -1, &st_i, &st_n, 1);
         } else if ((*arr)[i] == '(') {
             printf("(\n");
-            magic(BRAC, "(", -1, &st_i, &st_n, 4);
+            magic(BRAC, '(', -1, &st_i, &st_n, 4);
         } else if ((*arr)[i] == ')') {
             printf(")\n");
-            magic(BRAC, ")", -1, &st_i, &st_n, 4);
+            magic(BRAC, ')', -1, &st_i, &st_n, 4);
         } else if (isDigit((*arr)[i])) {
             double num;
             sscanf(&(*arr)[i], "%lf", &num);
             printf("%lf\n", num);
-            magic(NUMB, " ", num, &st_i, &st_n, -1);
+            magic(NUMB, ' ', num, &st_i, &st_n, -1);
             while (isDigit((*arr)[i])) {
                 i++;
             }
         } else if ((*arr)[i] == 'x') {
             printf("x\n");
-            magic(NUMB, " ", 10, &st_i, &st_n, -1);
+            magic(NUMB, ' ', 10, &st_i, &st_n, -1);
         }
     }
-    // TODO: printf("res = %lf", ?)
+    /* double num; */
+    /* popSt_n(st_n, &num); */
+    /* printf("res = %lf", num); */
+    char lex_pop;
+    int wtf_pop;
+    st_i = popSt_i(st_i, &wtf_pop, &lex_pop);
+    double num1, num2;
+    st_n = popSt_n(st_n, &num1);
+    st_n = popSt_n(st_n, &num2);
+    printf("\nlex pop %c\n", lex_pop);
+    calcOper(lex_pop, num1, num2);
     destroySt_i(st_i);
     destroySt_n(st_n);
 }
 
+/**
+ * @brief check char os digit
+ *
+ * @param ch
+ *
+ * @return true or false
+ */
 int isDigit(char ch) {
     int res = 0;
     if (ch >= 48 && ch <= 57 ) {
@@ -135,43 +135,70 @@ int isDigit(char ch) {
     return res;
 }
 
-void magic(int wtf, char *lex, double num, t_stack_i** st_i, t_stack_n** st_n, int prior) {
-    switch (wtf) {
-        case TRIG:
-            break;
-        case NUMB:
-            *st_n = pushSt_n(*st_n, num);
-            break;
-        case OPER:
-            while (prior >= (*st_i)->prior) {
-                char lex_pop[5];
-                int wtf_pop;
-                *st_i = popSt_i(*st_i, &wtf_pop, lex_pop);
-                if (wtf_pop == TRIG) {
-                    double num1;
-                    *st_n = popSt_n(*st_n, &num1);
-                    calcTrig(lex_pop, num1);
-                } else {
-                    double num1, num2;
-                    *st_n = popSt_n(*st_n, &num1);
-                    *st_n = popSt_n(*st_n, &num2);
-                    calcOper(lex_pop, num1, num2);
-                }
-            }
-            
-            break;
-        case BRAC:
-            if (lex[0] == '(') {
-                *st_i = pushSt_i(*st_i, BRAC, "(", 4);
+/**
+ * @brief check what is it and calculate different operations
+ *
+ * @param wtf
+ * @param lex
+ * @param num
+ * @param st_i
+ * @param st_n
+ * @param prior
+ */
+void magic(int wtf, char lex, double num, t_stack_i** st_i, t_stack_n** st_n, int prior) {
+    if (wtf == TRIG) {
+        *st_i = pushSt_i(*st_i, wtf, lex, prior);
+    } else if (wtf == NUMB) {
+        *st_n = pushSt_n(*st_n, num); 
+    } else if (wtf == OPER) {
+        while (prior >= (*st_i)->prior) {
+            char lex_pop[5];
+            int wtf_pop;
+            *st_i = popSt_i(*st_i, &wtf_pop, lex_pop);
+            if (wtf_pop == TRIG) {
+                double num1;
+                *st_n = popSt_n(*st_n, &num1);
+                /* calcTrig(lex_pop, num1); */
             } else {
-                calcBrack(st_i, st_n);
+                double num1, num2;
+                *st_n = popSt_n(*st_n, &num1);
+                *st_n = popSt_n(*st_n, &num2);
+                calcOper(lex_pop[0], num1, num2);
             }
-            break;
+        }
+    } else if (wtf == BRAC) {
+        if (lex == '(') {
+            *st_i = pushSt_i(*st_i, BRAC, '(', 4);
+        /* } else { */
+        /*     calcBrack(st_i, st_n); */
+        }
     }
 }
 
-double calcOper(char *lex, double num1, double num2){
+/**
+ * @brief calculate for binary operations
+ *
+ * @param lex
+ * @param num1
+ * @param num2
+ *
+ * @return 
+ */
+double calcOper(char lex, double num1, double num2){
     double res;
-
+    printf("%lf && %lf", num1, num2);
+    if (lex == '*') {
+        res = num1 * num2;
+    } else if (lex == '/') {
+        res = num2 / num1;
+    } else if (lex == '-') {
+        res = num2 - num1;
+    } else if (lex == '+') {
+        res = num1 + num2;
+    } else {
+        printf("\nnot\n");
+        printf("\n%c\n", lex);
+    }
+    printf("\nin calc: %lf\n", res);
     return (res);
 }
